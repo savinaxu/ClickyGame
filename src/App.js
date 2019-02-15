@@ -1,28 +1,91 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Footer from './components/Footer'
+import Title from './components/Title'
+import Navbar from './components/Navbar'
+import Wrapper from './components/Wrapper'
+import Images from './components/Images'
+import ImageJson from './ImageJson'
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+    state = {
+        ImageJson,
+        clickedCharacters: [],
+        score: 0,
+        topScore: 0,
+        navMessage: "Click an image to begin!"
+    }
+
+    scoreChecker = id => {
+        let character = this.state.clickedCharacters
+        if(character.length !== 0 && character.indexOf(id) > 0) {
+            this.setState({
+                clickedCharacters: [],
+                score: 0,
+                navMessage: "Incorrect guess!"
+            })
+        } else {
+            character.push(id)
+            this.setState({
+                score: this.state.score + 1,
+                navMessage: "Correct!",
+                clickedCharacters: character
+            })
+            if (this.state.score >= this.state.topScore) {
+                this.setState({
+                    topScore: this.state.score
+                })
+            }
+        }
+    }
+
+    // randomCharacter = () => {
+    //     let characters = this.state.ImageJson
+    //     let randomChar = []
+    //     let random = Math.floor(Math.random()* characters.length)
+    //     for (let i = 0; i < characters.length; i++) {
+    //         randomChar.push(characters[random])
+    //         characters.splice(random, 1)
+    //     }
+    // }
+
+    shuffleArray = array => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const tempStore = array[i];
+            array[i] = array[j];
+            array[j] = tempStore;
+        }
+        return array;
+    }
+
+
+    render() {
+        const shuffledCharacters = this.shuffleArray(this.state.ImageJson)
+        return (
+            <Wrapper>
+                <Navbar 
+                    navMessage={this.state.navMessage}
+                    score={this.state.score}
+                    topScore={this.state.topScore}
+                />
+                <Title />
+                <div className="card-container"> 
+                    {shuffledCharacters.map(character => (
+                        <Images 
+                            score={this.state.score}
+                            topScore={this.state.topScore}
+                            id={character.id}
+                            key={character.key}
+                            name={character.name}
+                            image={character.image}
+                            scoreChecker={this.scoreChecker}
+                        />
+                    ))}
+                </div>
+                <Footer />
+            </Wrapper>
+        )
+    }
 }
 
-export default App;
+export default App
