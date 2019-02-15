@@ -26,11 +26,11 @@ class App extends Component {
         } else {
             character.push(id)
             this.setState({
-                score: this.state.score + 1,
+                score: this.state.score += 1,
                 navMessage: "Correct!",
                 clickedCharacters: character
             })
-            if (this.state.score >= this.state.topScore) {
+            if (this.state.score > this.state.topScore) {
                 this.setState({
                     topScore: this.state.score
                 })
