@@ -17,7 +17,7 @@ class App extends Component {
 
     scoreChecker = id => {
         let character = this.state.clickedCharacters
-        if(character.length !== 0 && character.indexOf(id) > 0) {
+        if(character.length !== 0 && character.includes(id)) {
             this.setState({
                 clickedCharacters: [],
                 score: 0,
